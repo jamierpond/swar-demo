@@ -11,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
         zoo
         GIT_REPOSITORY https://github.com/thecppzoo/zoo.git
-        GIT_TAG jp/add-cmake
+        GIT_TAG master
         GIT_PROGRESS TRUE
         GIT_SHALLOW TRUE
 )
@@ -20,8 +20,3 @@ FetchContent_MakeAvailable(zoo)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/inc)
-
-
-# link zoo library
-# find the zoo library
-# target_link_libraries(SwarDemo zoo)
