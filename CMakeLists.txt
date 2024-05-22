@@ -18,5 +18,24 @@ FetchContent_Declare(
 FetchContent_Populate(zoo)
 FetchContent_MakeAvailable(zoo)
 
+set(BENCHMARK_ENABLE_TESTING OFF)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
+FetchContent_Declare(
+        benchmark
+        GIT_REPOSITORY https://github.com/google/benchmark
+        GIT_TAG main
+        GIT_PROGRESS TRUE
+        GIT_SHALLOW TRUE
+)
+FetchContent_Populate(benchmark)
+FetchContent_MakeAvailable(benchmark)
+add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
+
+# https://github.com/google/benchmark
+
 add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/inc)
+target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/benchmark)
+
+message(STATUS "BENCHMARK_DOWNLOAD_DEPENDENCIES: ${BENCHMARK_DOWNLOAD_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} benchmark::benchmark)
