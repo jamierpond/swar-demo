@@ -1,17 +1,20 @@
 #include "utils.h"
 #include "swar-strlen.h"
 
-#define STRLEN_X_LIST \
-  X(strlen) \
-  X(c_strLength_natural)
+#define STRLEN_FUNCTIONS \
+    X(_LIBC_STRLEN, strlen) \
+    X(_ZOO_STRLEN, c_strLength_natural) \
+    X(_ZOO_NATURAL_STRLEN, c_strLength_manualComparison) \
 
-struct StrLen { int operator()(const char *p) { return strlen(p); } };
-struct StrZooNatural { int operator()(const char *p) { return c_strLength_natural(p); } };
-struct StrBetter { int operator()(const char *p) { return c_strLength_manualComparison(p); } };
+#define X(Typename, FunctionToCall) \
+    struct Invoke##Typename { int operator()(const char *p) { return FunctionToCall(p); } };
+    STRLEN_FUNCTIONS
+#undef X
 
-BENCHMARK(runBenchmark<CorpusLeadingSpaces, StrZooNatural>);
-BENCHMARK(runBenchmark<CorpusLeadingSpaces, StrBetter>);
-BENCHMARK(runBenchmark<CorpusLeadingSpaces, StrLen>);
+#define X(Typename, _) \
+    BENCHMARK(runBenchmark<CorpusStringLength, Invoke##Typename>);
+    STRLEN_FUNCTIONS
+#undef X
 
 BENCHMARK_MAIN();
 
