@@ -2,8 +2,8 @@
 
 cmake_minimum_required(VERSION 3.17)
 
-project(SwarDemo)
-
+set(PROJECT_NAME SwarDemo)
+project(${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 20)
 
 include(FetchContent)
@@ -15,9 +15,13 @@ FetchContent_Declare(
         GIT_PROGRESS TRUE
         GIT_SHALLOW TRUE
 )
-
 FetchContent_Populate(zoo)
 FetchContent_MakeAvailable(zoo)
-add_subdirectory(${zoo_SOURCE_DIR} ${zoo_BINARY_DIR})
 
-add_executable(SwarDemo main.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
+target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/inc)
+
+
+# link zoo library
+# find the zoo library
+# target_link_libraries(SwarDemo zoo)
