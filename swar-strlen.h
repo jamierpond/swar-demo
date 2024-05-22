@@ -1,6 +1,35 @@
+#include <cstddef>
 #include <cstring>
 #include <tuple>
+#include <type_traits>
 #include <zoo/swar/SWAR.h>
+
+template <typename IntegerType = size_t>
+constexpr static
+std::enable_if_t<std::is_integral_v<IntegerType>, bool>
+is_power_of_two(IntegerType x) noexcept {
+  return x > 0 && (x & (x - 1)) == 0;
+}
+
+template <typename IntegerType = size_t, IntegerType X>
+constexpr static
+std::enable_if_t<std::is_integral_v<IntegerType>, bool>
+is_power_of_two() noexcept {
+  return is_power_of_two(X);
+}
+static_assert(is_power_of_two<int, 4>());
+
+template <size_t N>
+constexpr static
+std::enable_if_t<
+    std::is_integral_v<size_t> &&
+    is_power_of_two<size_t, N>(), size_t>
+modulo_power_of_two(auto x) noexcept {
+  return x & (N - 1);
+}
+static_assert(modulo_power_of_two<4>(0) == 0);
+static_assert(modulo_power_of_two<8>(9) == 1);
+static_assert(modulo_power_of_two<4096>(4097) == 1);
 
 /// @brief Loads the "block" containing the pointer, by proper alignment
 /// @tparam PtrT Pointer type for loading
@@ -10,18 +39,20 @@
 /// @return a pair to indicate the aligned pointer to the base of the block
 /// and the misalignment, in bytes, of the source pointer
 template <typename PtrT, typename Block>
-std::tuple<PtrT *, int> blockAlignedLoad(PtrT *pointerInsideBlock, Block *b) {
+constexpr static std::tuple<PtrT *, int> blockAlignedLoad(PtrT *pointerInsideBlock, Block *b) {
   uintptr_t asUint = reinterpret_cast<uintptr_t>(pointerInsideBlock);
   constexpr auto Alignment = alignof(Block), Size = sizeof(Block);
   static_assert(Alignment == Size);
-  auto misalignment = asUint % Alignment;
+  static_assert(is_power_of_two(Alignment));
+  const auto misalignment = modulo_power_of_two<Alignment>(asUint);
   auto *base = reinterpret_cast<PtrT *>(asUint - misalignment);
   memcpy(b, base, Size);
   return {base, misalignment};
 }
 
 /// \brief Helper function to fix the non-string part of block
-template <typename S> S adjustMisalignmentFor_strlen(S data, int misalignment) {
+template <typename S>
+constexpr static S adjustMisalignmentFor_strlen(S data, int misalignment) {
   // The speculative load has the valid data in the higher lanes.
   // To use the same algorithm as the rest of the implementation, simply
   // populate with ones the lower part, in that way there won't be nulls.
@@ -72,3 +103,6 @@ constexpr static std::size_t c_strLength(const char *s) noexcept {
     }
 }
 
+
+constexpr char hello[] = "Hello";
+// static_assert(c_strLength(hello) == 5);
