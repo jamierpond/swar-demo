@@ -10,9 +10,9 @@ constexpr static size_t naieve(const char *s) noexcept {
 }
 
 #define STRLEN_FUNCTIONS \
+    X(NAIEVE_STRLEN, naieve) \
     X(_LIBC_STRLEN, strlen) \
-    X(_ZOO_STRLEN_NORMAL, c_strLength) \
-    X(FUN, naieve) \
+    X(_ZOO_STRLEN, c_strLength) \
 
 #define X(Typename, FunctionToCall) \
     struct Invoke##Typename { int operator()(const char *p) { return FunctionToCall(p); } };
