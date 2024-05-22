@@ -69,8 +69,8 @@ static std::size_t c_strLength_manualComparison(const char *s) noexcept {
       return firstNullIndex + (base - s);
     }
   }
-}
 
+}
 constexpr static std::size_t c_strLength(const char *s) noexcept {
     using S = zoo::swar::SWAR<8, uint64_t>;
     constexpr auto

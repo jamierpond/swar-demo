@@ -12,8 +12,6 @@ constexpr static size_t naieve(const char *s) noexcept {
 #define STRLEN_FUNCTIONS \
     X(_LIBC_STRLEN, strlen) \
     X(_ZOO_STRLEN_NORMAL, c_strLength) \
-    X(_ZOO_STRLEN_NATURAL, c_strLength_natural) \
-    X(_ZOO_NATURAL_STRLEN, c_strLength_manualComparison) \
     X(FUN, naieve) \
 
 #define X(Typename, FunctionToCall) \
