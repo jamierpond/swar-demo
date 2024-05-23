@@ -42,7 +42,7 @@ static_assert(modulo_power_of_two<4096>(4097) == 1);
 /// @return a pair to indicate the aligned pointer to the base of the block
 /// and the misalignment, in bytes, of the source pointer
 template <typename PtrT, typename Block>
-constexpr static std::tuple<PtrT *, int> blockAlignedLoad(PtrT *pointerInsideBlock, Block *b) {
+constexpr inline static std::tuple<PtrT *, int> blockAlignedLoad(PtrT *pointerInsideBlock, Block *b) noexcept {
   uintptr_t asUint = reinterpret_cast<uintptr_t>(pointerInsideBlock);
   constexpr auto Alignment = alignof(Block), Size = sizeof(Block);
   static_assert(Alignment == Size);
@@ -55,7 +55,7 @@ constexpr static std::tuple<PtrT *, int> blockAlignedLoad(PtrT *pointerInsideBlo
 
 /// \brief Helper function to fix the non-string part of block
 template <typename S>
-constexpr static S adjustMisalignmentFor_strlen(S data, int misalignment) {
+constexpr inline static S adjustMisalignmentFor_strlen(S data, int misalignment) noexcept {
   // The speculative load has the valid data in the higher lanes.
   // To use the same algorithm as the rest of the implementation, simply
   // populate with ones the lower part, in that way there won't be nulls.
