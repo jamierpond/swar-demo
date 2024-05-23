@@ -15,7 +15,7 @@ constexpr static size_t naieve(const char *s) noexcept {
     X(_LIBC_STRLEN, strlen) \
 
 #define X(Typename, FunctionToCall) \
-    struct Invoke##Typename { int operator()(const char *p) { return FunctionToCall(p); } };
+    struct Invoke##Typename { static int operator()(const char *p) { return FunctionToCall(p); } };
     STRLEN_FUNCTIONS
 #undef X
 
