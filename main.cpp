@@ -20,7 +20,7 @@ constexpr static size_t naieve(const char *s) noexcept {
 #undef X
 
 #define X(Typename, _) \
-    BENCHMARK(runBenchmark<CorpusStringLength, Invoke##Typename>);
+    BENCHMARK(jamie_demo::runBenchmark<CorpusStringLength, Invoke##Typename>);
     STRLEN_FUNCTIONS
 #undef X
 
