@@ -1,7 +1,7 @@
 #include "utils.h"
 #include "swar-strlen.h"
 
-constexpr static size_t naieve(const char *s) noexcept {
+constexpr inline static size_t naieve(const char *s) noexcept {
     size_t i = 0;
     while (s[i] != '\0') {
         i++;

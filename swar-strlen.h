@@ -46,8 +46,7 @@ constexpr inline static std::tuple<PtrT *, int> blockAlignedLoad(PtrT *pointerIn
   uintptr_t asUint = reinterpret_cast<uintptr_t>(pointerInsideBlock);
   constexpr auto Alignment = alignof(Block), Size = sizeof(Block);
   static_assert(Alignment == Size);
-  static_assert(is_power_of_two(Alignment));
-  const auto misalignment = modulo_power_of_two<Alignment>(asUint);
+  const auto misalignment = asUint % Size;
   auto *base = reinterpret_cast<PtrT *>(asUint - misalignment);
   memcpy(b, base, Size);
   return {base, misalignment};
