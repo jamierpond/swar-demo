@@ -54,7 +54,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/benchmark)
 message(STATUS "BENCHMARK_DOWNLOAD_DEPENDENCIES: ${BENCHMARK_DOWNLOAD_DEPENDENCIES}")
 target_link_libraries(${PROJECT_NAME} benchmark::benchmark)
 
-set(COMPILER_FLAGS "-O3 -march=native")
+set(COMPILER_FLAGS "-O2 -march=native")
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
   # assume avx2 is available
