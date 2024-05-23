@@ -10,7 +10,7 @@ constexpr static size_t naieve(const char *s) noexcept {
 }
 
 #define STRLEN_FUNCTIONS \
-    X(_ZOO_STRLEN, c_strLength) \
+    X(_ZOO_STRLEN, jamie_demo::c_strLength) \
     X(_NAIEVE_STRLEN, naieve) \
     X(_LIBC_STRLEN, strlen) \
 

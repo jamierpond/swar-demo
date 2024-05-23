@@ -4,6 +4,9 @@
 #include <type_traits>
 #include <zoo/swar/SWAR.h>
 
+namespace jamie_demo {
+
+
 template <typename IntegerType = size_t>
 constexpr static
 std::enable_if_t<std::is_integral_v<IntegerType>, bool>
@@ -108,3 +111,5 @@ constexpr static std::size_t c_strLength(const char *s) noexcept {
 
 constexpr char hello[] = "Hello";
 // static_assert(c_strLength(hello) == 5);
+
+}
