@@ -1,3 +1,4 @@
+#pragma once
 #include <cstddef>
 #include <cstring>
 #include <zoo/swar/SWAR.h>
@@ -29,14 +30,15 @@ constexpr static std::size_t c_strLength(const char *s) noexcept {
   constexpr auto MSBs = S{S::MostSignificantBit},
                  Ones = S{S::LeastSignificantBit};
   constexpr auto BytesPerIteration = sizeof(S::type); // 8 * Num Lanes = 64
-  S initialBytes{0};
 
+  // Helper lambda
   constexpr auto indexOfFirstTrue = [](auto boolSwar) {
     return boolSwar.lsbIndex();
   };
 
   // Load the first block, calculate misalignment, and zero out the lower
   // part of the block if necessary
+  S initialBytes{0};
   auto [alignedBase, misalignment] = blockAlignedLoad(s, &initialBytes.m_v);
   auto bytes = adjustMisalignmentFor_strlen(initialBytes, misalignment);
 
