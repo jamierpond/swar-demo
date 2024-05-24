@@ -45,11 +45,16 @@ constexpr static auto findEmptyLanes(const S &bytes) noexcept {
   using Type = typename S::type;
   using BS = zoo::swar::BooleanSWAR<NBits, Type>;
   constexpr auto Ones = S{S::LeastSignificantBit};
+
+  // Subtracting 1 from a number which is null will cause a borrow from the lane
+  // above which will cause the MSB to be set. This is the key to the algorithm.
   auto firstNullTurnsOnMSB = bytes - Ones;
-  auto inverse = ~bytes;
-  auto firstMSBsOnIsFirstNull = firstNullTurnsOnMSB & inverse;
-  auto onlyMSBs =
-      zoo::swar::convertToBooleanSWAR(firstMSBsOnIsFirstNull).value();
+  auto inverseBytes = ~bytes;
+
+  // If the whole byte was null, the MBS will be set, AND the previous byte
+  // will have been zero.
+  auto firstMSBsOnIsFirstNull = firstNullTurnsOnMSB & inverseBytes;
+  auto onlyMSBs = zoo::swar::convertToBooleanSWAR(firstMSBsOnIsFirstNull).value();
   return BS{onlyMSBs};
 }
 
@@ -82,9 +87,13 @@ constexpr static std::size_t c_strLength(const char *s) noexcept {
     if (emptyBytes) {
       return alignedBase + indexOfFirstTrue(emptyBytes) - s;
     }
+
+    // advance
     alignedBase += BytesPerIteration;
-    memcpy(&bytes, alignedBase, BytesPerIteration); // advance
+    memcpy(&bytes, alignedBase, BytesPerIteration);
   }
 }
+
+
 
 } // namespace jamie_demo
