@@ -1,14 +1,16 @@
 #include "utils.h"
 #include "swar-strlen.h"
 
-constexpr inline static size_t naieve(const char *s) noexcept {
+// Basic string length function
+static size_t naieve(const char *s) {
     size_t i = 0;
     while (s[i] != '\0') {
         i++;
     }
     return i;
 }
-static_assert(naieve("hello") == 5, "naieve strlen is broken");
+
+/* Boring benchmarking code below */
 
 #define STRLEN_FUNCTIONS \
     X(_ZOO_STRLEN, jamie_demo::c_strLength) \

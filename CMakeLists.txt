@@ -46,6 +46,11 @@ FetchContent_MakeAvailable(benchmark)
 add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
 
 # https://github.com/google/benchmark
+set(COMPILER_FLAGS "-O2 -march=native")
+
+message(STATUS "Compiler flags: ${COMPILER_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${COMPILER_FLAGS}")
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/inc)
@@ -53,22 +58,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${zoo_SOURCE_DIR}/benchmark)
 
 message(STATUS "BENCHMARK_DOWNLOAD_DEPENDENCIES: ${BENCHMARK_DOWNLOAD_DEPENDENCIES}")
 target_link_libraries(${PROJECT_NAME} benchmark::benchmark)
-
-set(COMPILER_FLAGS "-O2 -march=native")
-
-if (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-  # assume avx2 is available
-  message(STATUS "AVX2 is available")
-  set(COMPILER_FLAGS "${COMPILER_FLAGS} -mavx2")
-endif ()
-
-if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
-  message(STATUS "ARM processor detected")
-  set(COMPILER_FLAGS "${COMPILER_FLAGS} -mfpu=neon")
-endif ()
-
-message(STATUS "Compiler flags: ${COMPILER_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${COMPILER_FLAGS}")
 
 
