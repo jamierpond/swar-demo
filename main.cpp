@@ -1,4 +1,3 @@
-#include "utils.h"
 #include "swar-strlen.h"
 
 // Basic string length function
